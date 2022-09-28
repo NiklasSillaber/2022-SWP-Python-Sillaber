@@ -1,35 +1,33 @@
 import random
 
+def createLottoPool():
+    numbers = []
+    for i in range(45):
+        numbers.append(i + 1)
+    return numbers
+
 def createDictionary():
     statistics = {}
     for i in range(45):
         statistics[i + 1] = 0
     return statistics
-
-statistics = createDictionary()
     
-def lotto():
+def playLotto():
     
     len = 44
-
-    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 
-        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 
-        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
-        39, 40, 41, 42, 43, 44, 45]
-    
+    numbers = createLottoPool()
     result = []
     
+    #draw 6 numbers without putting them back to pool
     for i in range(6):
         randomIndex = random.randint(0, len)
         
-        number = numbers[randomIndex];
+        pick = numbers[randomIndex];
+        result.append(pick)
         
-        numbers[randomIndex] = numbers[len]
-        numbers[len] = number
-        
+        numbers[randomIndex], numbers[len] = numbers[len], pick
         len = len -1
         
-        result.append(number)
     return result
 
 def saveInDictionary(results):
@@ -38,16 +36,21 @@ def saveInDictionary(results):
     for r in results:
         statistics[r] = statistics[r] + 1
 
+
 if __name__ == '__main__':
     
-    print("Es werden 6 Lotto-Zahlen gezogen:")
+    statistics = createDictionary()
+    
+    print("Es werden einmal 6 Lotto-Zahlen gezogen:")
+    print(playLotto())
+    
+    print("\nEs werden 1000 mal 6 Lotto-Zahlen gezogen:")
     for i in range(1000):
         for i in range(6):
-            result = lotto()
+            result = playLotto()
             saveInDictionary(result)
             
     print(statistics)
-        
             
     
 
