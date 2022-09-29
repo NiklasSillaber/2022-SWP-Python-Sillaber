@@ -46,9 +46,8 @@ if __name__ == '__main__':
     
     print("\nEs werden 1000 mal 6 Lotto-Zahlen gezogen:")
     for i in range(1000):
-        for i in range(6):
-            result = playLotto()
-            saveInDictionary(result)
+        result = playLotto()
+        saveInDictionary(result)
             
     print(statistics)
             
