@@ -1,27 +1,26 @@
 import random
 
-def createLottoPool():
+def createLottoPool(min, max):
     numbers = []
-    for i in range(45):
-        numbers.append(i + 1)
+    for i in range(min, max + 1):
+        numbers.append(i)    
     return numbers
 
-def createDictionary():
+def createDictionary(min, max):
     statistics = {}
-    for i in range(45):
-        statistics[i + 1] = 0
+    for i in range(min, max + 1):
+        statistics[i] = 0
     return statistics
     
-def playLotto():
+def playLotto(min, max):
     
-    len = 44
-    numbers = createLottoPool()
+    len = max - min
+    numbers = createLottoPool(min, max)
     result = []
     
     #draw 6 numbers without putting them back to pool
     for i in range(6):
         randomIndex = random.randint(0, len)
-        
         pick = numbers[randomIndex];
         result.append(pick)
         
@@ -31,22 +30,23 @@ def playLotto():
     return result
 
 def saveInDictionary(results):
-    global statistics
     
     for r in results:
         statistics[r] = statistics[r] + 1
 
+#Zahlen sollen auch dynamisch sein
+#man soll eingeben von wo bis wo die Zahlen gehen und die Anzahl der Ziehungen
 
+#in mehrere Python Dateien: Python hat __Variablen__, werden von Python angelegt. in der __name__ steckt immer der Name von jeder Python Datei drinnen
 if __name__ == '__main__':
     
-    statistics = createDictionary()
+    min, max, number_picks = 50, 99, 77
     
-    print("Es werden einmal 6 Lotto-Zahlen gezogen:")
-    print(playLotto())
+    statistics = createDictionary(min, max)
     
-    print("\nEs werden 1000 mal 6 Lotto-Zahlen gezogen:")
-    for i in range(1000):
-        result = playLotto()
+    print("\nEs werden " + str(number_picks) + " mal 6 Lotto-Zahlen gezogen:")
+    for i in range(number_picks):
+        result = playLotto(min, max)
         saveInDictionary(result)
             
     print(statistics)
