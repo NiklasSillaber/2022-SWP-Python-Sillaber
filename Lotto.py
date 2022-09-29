@@ -40,7 +40,7 @@ def saveInDictionary(results):
 #in mehrere Python Dateien: Python hat __Variablen__, werden von Python angelegt. in der __name__ steckt immer der Name von jeder Python Datei drinnen
 if __name__ == '__main__':
     
-    min, max, number_picks = 50, 99, 77
+    min, max, number_picks = 50, 99, 100000
     
     statistics = createDictionary(min, max)
     
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         result = playLotto(min, max)
         saveInDictionary(result)
             
-    print(statistics)
+    print(sorted(statistics.values()))
             
     
 
