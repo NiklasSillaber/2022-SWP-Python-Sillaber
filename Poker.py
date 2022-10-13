@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 #13 verschiedene Symbole % 13
@@ -11,15 +12,32 @@ def testColors(arr):
         print(i % 2)
         
 #5 Karten ziehen
-def draw(hand):
+def drawFromPool(hand):
+    #Pool erstellen
+    pool = np.arange(52)
+    
+    lastIndex = len(pool)
+    result = []
+    
+    #Karten ziehen, ohne sie zurück in den Pool zu legen
     for i in range(hand):
-        print(i)
+        randomIndex = random.randint(0, lastIndex - 1)
+        pick = pool[randomIndex];
+        
+        pool[randomIndex], pool[lastIndex - 1] = pool[lastIndex - 1], pick
+        lastIndex = lastIndex -1
+        
+        result.append(pick)
+        
+    return result
+        
+        
 
 if __name__ == '__main__':
-    pool = np.arange(52)
     #testSymbol(pool)
     #testColors(pool)
-    draw(5)
+    print(drawFromPool(5))
+    
     
     
     
