@@ -1,18 +1,19 @@
 import random
+from wsgiref import handlers
 import numpy as np
 
 #13 verschiedene Symbole % 13
-def testSymbols(arr):
+def test_symbols(arr):
     for i in arr:
         print(i % 13)
 
-#4 verschiedene Farben % 2
-def testColors(arr):
+#4 verschiedene Farben % 4
+def test_colors(arr):
     for i in arr:
-        print(i % 2)
+        print(i % 4)
         
 #5 Karten ziehen
-def drawFromPool(hand):
+def draw_from_pool(hand):
     #Pool erstellen
     pool = np.arange(52)
     
@@ -35,31 +36,43 @@ def drawFromPool(hand):
 
 #Zwei Karten selbes Symbol
 def paar(hand):
+    
+    helpZweiPaare = hand.copy()
+    
     for i in hand:
         for j in np.delete(hand, np.where(hand == i)):
             if i % 13 == j % 13:
-                return True
-    return False
+                helpZweiPaare.remove(i)
+                helpZweiPaare.remove(j)
+                return True, helpZweiPaare
+    return False, []
 
 #Zwei Paare ---------------------------------
-def zweiPaare(hand): 
-    counter = 2
-    for i in hand:
-        for j in np.delete(hand, np.where(hand == i)):
-            if i % 13 == j % 13:
-                return True
+def zwei_paare(hand): 
+    isPaar, left3 = paar(hand)
+    if isPaar:
+        isSecondPaar, left1 = paar(left3)
+        if isSecondPaar:
+            return True
     return False
 
 #Drei Karten selbes Symbol ---------------------------
 def drilling(hand):
+    
     for i in hand:
         counter = 2
+        
+        #Für das Full House werden die beiden Karten, die nicht zum Drilling beitragen, benötigt
+        helpFullHouse = hand.copy()
+        
         for j in np.delete(hand, np.where(hand == i)):
             if i % 13 == j % 13:
+                helpFullHouse.remove(j)
                 counter = counter - 1
                 if counter == 0:
-                    return True
-    return False
+                    helpFullHouse.remove(i)
+                    return True, helpFullHouse
+    return False, []
 
 #Vier Karten selbes Symbol
 def vierling(hand):
@@ -72,13 +85,115 @@ def vierling(hand):
                     return True
     return False
         
+#Straße
+def strasse(hand):
+    arr = []
+    for i in hand:
+        arr.append(i % 13)
+    sorted = np.sort(arr)
+    
+    for i in range(0, 5):
+        
+        if i == 0:
+            continue
+            
+        if sorted[i] - sorted[i - 1] != 1:
+            return False
+
+    return True
+    
+#Flush
+def flush(hand):
+    first = hand[0]
+    
+    for i in np.delete(hand, np.where(hand == first)):
+        
+        if first % 4 != i % 4:
+            return False
+    return True
+
+#Full House
+def full_house(hand):
+    isDrilling, left2 = drilling(hand)
+    if isDrilling:
+        if left2[0] % 13 == left2[1] % 13:
+            return True
+    return False
+
+#Straight Flush
+def straight_flush(hand):
+    if strasse(hand):
+        color = hand[0] % 4
+        for i in range(1, 5):
+            if hand[i] % 4 != color:
+                return False
+        return True
+    return False
+
+#Royal Flush
+def royale_flush(hand):
+    if straight_flush(hand):
+        for i in hand:
+            if i % 13 == 12:
+                return True
+    return False
+
+#Dictionary Anzahl Kombinationen
+def recognizeAndAddKombination(hand):
+    isPaar, left3 = paar(hand)
+    isDrilling, left2 = drilling(hand)
+    
+    if royale_flush(hand):
+        kombinations['royaleFlush'] += 1
+    elif straight_flush(hand):
+        kombinations['straightFlush'] += 1
+    elif vierling(hand):
+        kombinations['vierling'] += 1
+    elif full_house(hand):
+        kombinations['fullHouse'] += 1
+    elif flush(hand):
+        kombinations['flush'] += 1
+    elif strasse(hand):
+        kombinations['straße'] += 1
+    elif isDrilling:
+        kombinations['drilling'] += 1
+    elif zwei_paare(hand):
+        kombinations['zweiPaare'] += 1
+    elif isPaar:
+        kombinations['paar'] += 1
+
+def calculateProbabilities():
+    print("Wahrscheinlichkeiten Poker:")
+    print("---------------------------")
+    print("Kombination: Berechnete W. => Echte W.")
+    
+    print("Paar: " + str(kombinations['paar'] * 100 / games) + "% => 42.2569%")
+    print("Zwei Paare: " + str(kombinations['zweiPaare'] * 100 / games) + "% => 4.7539%")
+    print("Drilling: " + str(kombinations['drilling'] * 100 / games) + "% => 2.1128%")
+    print("Straße: " + str(kombinations['straße'] * 100 / games) + "% => 0.3925%")
+    print("Flush: " + str(kombinations['flush'] * 100 / games) + "% => 0.1965%")
+    print("Full House: " + str(kombinations['fullHouse'] * 100 / games) + "% => 0.1441%")
+    print("Vierling: " + str(kombinations['vierling'] * 100 / games) + "% => 0.0240%")
+    print("Straight Flush: " + str(kombinations['straightFlush'] * 100 / games) + "% => 0.00139%")
+    print("Royale Flush: " + str(kombinations['royaleFlush'] * 100 / games) + "% => 0.000154%")
+    
+    
 
 if __name__ == '__main__':
     
-    for i in range(1000):
-        hand = drawFromPool(5)
-        if vierling(hand):
-            print(hand)
+    kombinations = {'paar' : 0, 'zweiPaare' : 0, 'drilling' : 0, 'straße' : 0, 
+                    'flush' : 0, 'fullHouse' : 0, 'vierling' : 0, 'straightFlush' : 0,
+                    'royaleFlush' : 0}
+    
+    games = 100000
+    
+    for i in range(games):
+        hand = draw_from_pool(5)
+        recognizeAndAddKombination(hand)
+    print("Anzahl der Kombinationen")
+    print("------------------------")
+    print(kombinations)
+    calculateProbabilities()
     
     
     
