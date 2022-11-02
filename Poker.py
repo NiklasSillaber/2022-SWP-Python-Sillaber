@@ -50,7 +50,7 @@ def zweiPaare(hand):
                 return True
     return False
 
-#Drei Karten selbes Symbol
+#Drei Karten selbes Symbol ---------------------------
 def drilling(hand):
     for i in hand:
         counter = 2
