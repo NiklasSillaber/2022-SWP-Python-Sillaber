@@ -1,5 +1,4 @@
 import random
-from wsgiref import handlers
 import numpy as np
 
 #13 verschiedene Symbole % 13
