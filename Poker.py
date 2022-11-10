@@ -138,7 +138,7 @@ def royale_flush(hand):
     return False
 
 #Dictionary Anzahl Kombinationen
-def recognizeAndAddKombination(hand):
+def recognizeAndAddKombination(hand, kombinations):
     isPaar, left3 = paar(hand)
     isDrilling, left2 = drilling(hand)
     
@@ -161,40 +161,38 @@ def recognizeAndAddKombination(hand):
     elif isPaar:
         kombinations['paar'] += 1
 
-def calculateProbabilities():
-    print("Wahrscheinlichkeiten Poker:")
-    print("---------------------------")
-    print("Kombination: Berechnete W. => Echte W.")
-    
-    print("Paar: " + str(kombinations['paar'] * 100 / games) + "% => 42.2569%")
-    print("Zwei Paare: " + str(kombinations['zweiPaare'] * 100 / games) + "% => 4.7539%")
-    print("Drilling: " + str(kombinations['drilling'] * 100 / games) + "% => 2.1128%")
-    print("Straße: " + str(kombinations['straße'] * 100 / games) + "% => 0.3925%")
-    print("Flush: " + str(kombinations['flush'] * 100 / games) + "% => 0.1965%")
-    print("Full House: " + str(kombinations['fullHouse'] * 100 / games) + "% => 0.1441%")
-    print("Vierling: " + str(kombinations['vierling'] * 100 / games) + "% => 0.0240%")
-    print("Straight Flush: " + str(kombinations['straightFlush'] * 100 / games) + "% => 0.00139%")
-    print("Royale Flush: " + str(kombinations['royaleFlush'] * 100 / games) + "% => 0.000154%")
+def calculateProbabilities(kombinations, games, realProbsPerc):
+    print('Vergleich der Wahrscheinlichkeiten')
+    print('==================================')
+    print('Berechnete Wahrscheinlichkeit => Recherchierte Wahrscheinlichkeit')
     
     
+    for key in kombinations:
+        print(key + ": " + str(kombinations[key] * 100 / games) + " % => "+ str(realProbsPerc[key]) + ' %')
 
-if __name__ == '__main__':
-    
+def main():
     kombinations = {'paar' : 0, 'zweiPaare' : 0, 'drilling' : 0, 'straße' : 0, 
                     'flush' : 0, 'fullHouse' : 0, 'vierling' : 0, 'straightFlush' : 0,
                     'royaleFlush' : 0}
+    
+    realProbsPerc = {'paar' : 42.2569, 'zweiPaare' : 4.7539, 'drilling' : 2.1128, 'straße' : 0.3925, 
+                    'flush' : 0.1965, 'fullHouse' : 0.1441, 'vierling' : 0.0240, 'straightFlush' : 0.00139,
+                    'royaleFlush' : 0.000154}
     
     games = 100000
     
     for i in range(games):
         hand = draw_from_pool(5)
-        recognizeAndAddKombination(hand)
-    print("Anzahl der Kombinationen")
+        recognizeAndAddKombination(hand, kombinations)
+    print("\nAnzahl der Kombinationen")
     print("------------------------")
     print(kombinations)
-    calculateProbabilities()
+    calculateProbabilities(kombinations, games, realProbsPerc)
     
-    
+
+if __name__ == '__main__':
+    main()
+   
     
     
     
