@@ -1,4 +1,5 @@
 import random
+import time
 import numpy as np
 
 #13 verschiedene Symbole % 13
@@ -168,7 +169,9 @@ def calculateProbabilities(kombinations, games, realProbsPerc):
     
     
     for key in kombinations:
-        print(key + ": " + str(kombinations[key] * 100 / games) + " % => "+ str(realProbsPerc[key]) + ' %')
+        prob = kombinations[key] * 100 / games
+        prob = round(prob, 3)
+        print(key + ": " + str(prob) + " % => "+ str(realProbsPerc[key]) + ' %')
 
 def main():
     kombinations = {'paar' : 0, 'zweiPaare' : 0, 'drilling' : 0, 'straße' : 0, 
@@ -179,17 +182,20 @@ def main():
                     'flush' : 0.1965, 'fullHouse' : 0.1441, 'vierling' : 0.0240, 'straightFlush' : 0.00139,
                     'royaleFlush' : 0.000154}
     
-    games = 100000
-    
+    games = int(input("Wie viele Spiele möchten sie spielen?"))
+    starttime = time.time() * 1000
     for i in range(games):
         hand = draw_from_pool(5)
         recognizeAndAddKombination(hand, kombinations)
+    endtime = time.time() * 1000
     print("\nAnzahl der Kombinationen")
     print("------------------------")
     print(kombinations)
     calculateProbabilities(kombinations, games, realProbsPerc)
+   
+    millis = round((endtime-starttime) / 1000, 2)
+    print("Zeitbedarf: " + str(millis) + " Sekunden")
     
-
 if __name__ == '__main__':
     main()
    
