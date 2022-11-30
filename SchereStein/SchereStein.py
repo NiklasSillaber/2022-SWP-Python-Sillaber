@@ -14,19 +14,21 @@ class Symbol():
             
         def playAgainst(self, symbolComp):
             if symbolComp == self.symbol:
-                print("/[MENU]/[GAME]: --> UNENTSCHIEDEN <--")
+                return 0
             elif symbolComp == self.otherSymbols[0] or symbolComp == self.otherSymbols[2]:
-                print("/[MENU]/[GAME]: --> GEWONNEN <--")
+                return 1
             else:
-                print("/[MENU]/[GAME]: --> VERLOREN <--")
+                return -1
 
 class game():
-    def __init__ (self):
+    def __init__ (self, statistics):
         self.difficulty = None
         self.inputs = ['GAME', 'STATISTICS', 'UPLOAD']
         self.difficulties = [1, 2, 3]
-        self.play = True
         self.symbols = ['SCHERE', 'STEIN', 'PAPIER', 'SPOCK', 'ECHSE']
+        self.winsPlayer = 0
+        self.winsComp = 0
+        self.statistics = statistics
         
         print("\nWilkommen zum SchereStein-Spiel!")
         print("================================\n")
@@ -44,7 +46,7 @@ class game():
         
         if action == 'GAME':
             self.startGame()
-        elif action is 'STATISTICS':
+        elif action == 'STATISTICS':
             self.showStatistics()
         else:
             self.uploadToApi()
@@ -64,7 +66,7 @@ class game():
         if input not in symbols:
             if input is '':
                 return False
-            print("/[MENU]/[GAME]: Fehler! Geben Sie eines der folgenden Symbole ein! " + str(self.symbols))
+            print("/[MENU]/[GAME" + self.difficulty + "]: Fehler! Geben Sie eines der folgenden Symbole ein! " + str(self.symbols))
             return False
         return True
     
@@ -85,12 +87,36 @@ class game():
         pass
     
     def showStatistics(self):
-        pass
+        print("/[MENU]: " + str(self.statistics))
+        print("/[MENU]: ")
+        self.showMenu()
     
     def pickCompSymbol(self, symbolPlayer):
         #Leichter Modus => zufällige Wahl des Gegeners
         if int(self.difficulty) is 1:
             return self.symbols[randrange(0, 5)]
+    
+    def handleResult(self, result, symbolP, symbolC):
+        self.statistics["PLAYER"][self.symbols.index(symbolP) + 1] += 1
+        self.statistics["COMP"][self.symbols.index(symbolC) + 1] += 1
+        
+        if result is 0:
+                print("/[MENU]/[GAME" + self.difficulty + "]: --> UNENTSCHIEDEN <--")
+        elif result is 1:
+            print("/[MENU]/[GAME" + self.difficulty + "]: --> GEWONNEN <--")
+            self.winsPlayer += 1
+            self.statistics["PLAYER"][0] += 1
+        else:
+            print("/[MENU]/[GAME" + self.difficulty + "]: --> VERLOREN <--")
+            self.winsComp += 1
+            self.statistics["COMP"][0] += 1
+    
+    def exit(self):
+        self.difficulty = None
+        self.winsPlayer = 0
+        self.winsComp = 0
+        print("/[MENU]:")
+        self.showMenu()
     
     def startGame(self):
         print("/[MENU]/[GAME]: Sie befinden sich im Spiel. Geben Sie eine Schwierigkeit ein! " + str(self.difficulties))
@@ -101,19 +127,18 @@ class game():
                 break
             
         if self.difficulty == 'EXIT':
-            self.difficulty = None
-            self.showMenu() 
+            self.exit()
             
-        print("/[MENU]/[GAME]: Die Schwierigkeit " + self.difficulty + " wurde gewählt!")
-        print("/[MENU]/[GAME]: Das Spiel startet jetzt! Mit EXIT können Sie das Spiel frühzeitig beenden!")
-        print("/[MENU]/[GAME]:")
+        print("/[MENU]/[GAME" + self.difficulty + "]: Die Schwierigkeit " + self.difficulty + " wurde gewählt!")
+        print("/[MENU]/[GAME" + self.difficulty + "]: Das Spiel startet jetzt! Mit EXIT können Sie das Spiel frühzeitig beenden!")
+        print("/[MENU]/[GAME" + self.difficulty + "]:")
         
-        while self.play:
-            print("/[MENU]/[GAME]: PLAYER 0 | 0 COMP")
-            print("/[MENU]/[GAME]: Geben Sie ihr Symbol ein! " + str(self.symbols))
+        while True:
+            print("/[MENU]/[GAME" + self.difficulty + "]: PLAYER " + str(self.winsPlayer) + " | " + str(self.winsComp) + " COMP")
+            print("/[MENU]/[GAME" + self.difficulty + "]: Geben Sie ihr Symbol ein! " + str(self.symbols))
             
             while True: 
-                symbolPlayer = input('/[MENU]/[GAME]: ')
+                symbolPlayer = input('/[MENU]/[GAME' + self.difficulty + ']: ')
                 if self.validateInputGame(symbolPlayer):
                     break
                 
@@ -122,20 +147,13 @@ class game():
             
             symbolPlayer_obj = Symbol(symbolPlayer)
             symbolComp = self.pickCompSymbol(symbolPlayer)
-            print("/[MENU]/[GAME]: PLAYER " + str(symbolPlayer) + " | " + str(symbolComp) + " COMP")
-            symbolPlayer_obj.playAgainst(symbolComp)
+            print("/[MENU]/[GAME" + self.difficulty + "]: PLAYER " + str(symbolPlayer) + " | " + str(symbolComp) + " COMP")
+            result = symbolPlayer_obj.playAgainst(symbolComp)
+            self.handleResult(result, symbolPlayer, symbolComp)
+            print("/[MENU]/[GAME" + self.difficulty + "]:")
         
-        self.difficulty = None
-        self.showMenu()
-    
-    
-            
-
-            
-            
-            
-        
-        
+        self.exit()
     
 if __name__ == "__main__":
-    game = game()
+    statistics = {"PLAYER" : [0, 0, 0, 0, 0, 0], "COMP" : [0, 0, 0, 0, 0, 0]}
+    game = game(statistics)
