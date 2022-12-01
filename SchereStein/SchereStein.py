@@ -1,4 +1,5 @@
 from random import randrange
+from tabulate import tabulate
 
 
 class Symbol():
@@ -40,7 +41,7 @@ class game():
         print("/[MENU]: Sie befinden sich im Menü. Geben Sie eine der folgenen Funktionen ein! " + str(self.inputs))
         
         while True: 
-            action = input('/[MENU]/')
+            action = input('/[MENU]/').upper()
             if self.validateInputMenu(action):
                 break
         
@@ -53,6 +54,7 @@ class game():
         
             
     def validateInputMenu(self, input):
+        input = input.upper()
         if input not in self.inputs:
             if input is '':
                 return False
@@ -61,6 +63,7 @@ class game():
         return True
     
     def validateInputGame(self, input):
+        input = input.upper()
         symbols = self.symbols.copy()
         symbols.append('EXIT')
         if input not in symbols:
@@ -87,9 +90,15 @@ class game():
         pass
     
     def showStatistics(self):
-        print("/[MENU]: " + str(self.statistics))
-        print("/[MENU]: ")
+        #print("/[MENU]: " + str(self.statistics))
+        headers = ['NAME', 'WINS'] + self.symbols
+        playerData = ['PLAYER'] + self.statistics['PLAYER']
+        compData = ['COMP'] + self.statistics['COMP']
+        data = [playerData, compData]
+        
+        print(tabulate(data, headers=headers, tablefmt='orgtbl'))
         self.showMenu()
+        
     
     def pickCompSymbol(self, symbolPlayer):
         #Leichter Modus => zufällige Wahl des Gegeners
@@ -122,7 +131,7 @@ class game():
         print("/[MENU]/[GAME]: Sie befinden sich im Spiel. Geben Sie eine Schwierigkeit ein! " + str(self.difficulties))
         
         while True: 
-            difficulty = input('/[MENU]/[GAME]: ')
+            difficulty = input('/[MENU]/[GAME]: ').upper()
             if self.validateInputDifficulty(difficulty):
                 break
             
@@ -138,7 +147,7 @@ class game():
             print("/[MENU]/[GAME" + self.difficulty + "]: Geben Sie ihr Symbol ein! " + str(self.symbols))
             
             while True: 
-                symbolPlayer = input('/[MENU]/[GAME' + self.difficulty + ']: ')
+                symbolPlayer = input('/[MENU]/[GAME' + self.difficulty + ']: ').upper()
                 if self.validateInputGame(symbolPlayer):
                     break
                 
