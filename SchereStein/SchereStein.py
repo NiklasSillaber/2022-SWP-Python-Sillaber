@@ -1,6 +1,6 @@
 from random import randrange
 from tabulate import tabulate
-
+from RepositoryDB import RepositoryDB
 
 class Symbol():
         def __init__(self, symbol):
@@ -22,14 +22,19 @@ class Symbol():
                 return -1
 
 class game():
-    def __init__ (self, statistics):
+    def __init__ (self):
         self.difficulty = None
         self.inputs = ['GAME', 'STATISTICS', 'UPLOAD']
         self.difficulties = [1, 2, 3]
         self.symbols = ['SCHERE', 'STEIN', 'PAPIER', 'SPOCK', 'ECHSE']
         self.winsPlayer = 0
         self.winsComp = 0
-        self.statistics = statistics
+        
+        #Get statistics from DB
+        self.rep = RepositoryDB()
+        self.rep.connect()
+        self.statistics = self.rep.getStatistics()
+        self.rep.disconnect()
         
         print("\nWilkommen zum SchereStein-Spiel!")
         print("================================\n")
@@ -86,12 +91,18 @@ class game():
         self.difficulty = input
         return True
     
+    def updateDatabase(self):
+        self.rep.connect()
+        self.rep.deleteStatistics()
+        self.rep.insertStatistics(self.statistics)
+        self.rep.disconnect()
+    
     def uploadToApi(self):
         pass
     
     def showStatistics(self):
         #print("/[MENU]: " + str(self.statistics))
-        headers = ['NAME', 'WINS'] + self.symbols
+        headers = ['NAME', 'WINS', 'DRAWS'] + self.symbols
         playerData = ['PLAYER'] + self.statistics['PLAYER']
         compData = ['COMP'] + self.statistics['COMP']
         data = [playerData, compData]
@@ -106,11 +117,13 @@ class game():
             return self.symbols[randrange(0, 5)]
     
     def handleResult(self, result, symbolP, symbolC):
-        self.statistics["PLAYER"][self.symbols.index(symbolP) + 1] += 1
-        self.statistics["COMP"][self.symbols.index(symbolC) + 1] += 1
+        self.statistics["PLAYER"][self.symbols.index(symbolP) + 2] += 1
+        self.statistics["COMP"][self.symbols.index(symbolC) + 2] += 1
         
         if result is 0:
                 print("/[MENU]/[GAME" + self.difficulty + "]: --> UNENTSCHIEDEN <--")
+                self.statistics["PLAYER"][1] += 1
+                self.statistics["COMP"][1] += 1
         elif result is 1:
             print("/[MENU]/[GAME" + self.difficulty + "]: --> GEWONNEN <--")
             self.winsPlayer += 1
@@ -119,6 +132,9 @@ class game():
             print("/[MENU]/[GAME" + self.difficulty + "]: --> VERLOREN <--")
             self.winsComp += 1
             self.statistics["COMP"][0] += 1
+        
+        #Save changes to DB
+        self.updateDatabase()
     
     def exit(self):
         self.difficulty = None
@@ -164,5 +180,4 @@ class game():
         self.exit()
     
 if __name__ == "__main__":
-    statistics = {"PLAYER" : [0, 0, 0, 0, 0, 0], "COMP" : [0, 0, 0, 0, 0, 0]}
-    game = game(statistics)
+    game = game()
