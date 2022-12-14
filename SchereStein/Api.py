@@ -3,7 +3,7 @@ from flask import *
 from os.path import exists
 import pandas as pd
 import json
-from SchereStein.RepositoryDB import RepositoryDB
+from RepositoryDB import RepositoryDB
 
 app = Flask(__name__)
 rep = RepositoryDB()
@@ -33,7 +33,6 @@ def getData():
     rep.connect()
     statistics = rep.getStatistics()
     rep.disconnect()
-    statistics = {"PLAYER" : [1, 1, 5, 8, 5, 10, 2], "COMP" : [2, 1, 3, 3, 3, 3, 3]}
 
     dataP = {'Symbole' : 'in Prozent', 'Schere' : statistics['PLAYER'][2], 'Stein' : statistics['PLAYER'][3], 'Papier' : statistics['PLAYER'][4],
      'Spock' : statistics['PLAYER'][5], 'Echse' : statistics['PLAYER'][6]}
