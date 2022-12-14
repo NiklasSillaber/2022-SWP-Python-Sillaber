@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>RockPaperSiccorsSpockLizzard</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <script type="text/javascript">
+            google.charts.load("current", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var dataP = google.visualization.arrayToDataTable([
+                    {% for key, value in data[0].items() %}
+                        {% if value is string %}
+                            ['{{ key }}', '{{ value }}'],
+                        {% else %}
+                            ['{{ key }}', {{ value }}],
+                        {% endif %}
+                    {% endfor %}
+                ]);
+
+                var optionsP = {
+                title: 'PLAYER'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('piechartP'));
+                chart.draw(dataP, optionsP);
+
+
+                var dataC = google.visualization.arrayToDataTable([
+                    {% for key, value in data[1].items() %}
+                        {% if value is string %}
+                            ['{{ key }}', '{{ value }}'],
+                        {% else %}
+                            ['{{ key }}', {{ value }}],
+                        {% endif %}
+                    {% endfor %}
+                ]);
+
+                var optionsC = {
+                title: 'COMP'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('piechartC'));
+                chart.draw(dataC, optionsC);
+            }
+        </script>
+       
+    </head>
+
+    <body>
+        
+        <h1>Insgesamte Spiele {{ data[2]['PLAYER'][0] +  data[2]['PLAYER'][1] + data[2]['COMP'][0] }}</h1>
+        <h2>Unentschieden {{data[2]['PLAYER'][1]}}</h2>
+
+        <div class='content' style='display: flex; align-items: center; justify-content: center;'>
+            <div class='player'>
+
+                <div id="piechartP" style="width: 900px; height: 500px;"></div>
+                <br>
+                <h2>Gewonnen {{data[2]['PLAYER'][0]}}</h2>
+
+            </div>
+
+            <div class ='comp'>
+                <div id="piechartC" style="width: 900px; height: 500px;"></div>
+                <br>
+                <h2>Gewonnen {{data[2]['COMP'][0]}}</h2>
+            </div>
+            
+
+            </div>
+        </div>
+    </body>
+</html>
