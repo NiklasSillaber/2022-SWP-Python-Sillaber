@@ -1,6 +1,7 @@
 from random import randrange
 from tabulate import tabulate
-from RepositoryDB import RepositoryDB
+import requests
+import json
 
 class Symbol():
         def __init__(self, symbol):
@@ -20,6 +21,10 @@ class Symbol():
                 return 1
             else:
                 return -1
+        
+        def getCounter(self):
+            return self.otherSymbols[1]
+
 
 class game():
     def __init__ (self):
@@ -30,11 +35,8 @@ class game():
         self.winsPlayer = 0
         self.winsComp = 0
         
-        #Get statistics from DB
-        self.rep = RepositoryDB()
-        self.rep.connect()
-        self.statistics = self.rep.getStatistics()
-        self.rep.disconnect()
+        self.statistics = self.getDataFromApi()
+        print(self.statistics)
         
         print("\nWilkommen zum SchereStein-Spiel!")
         print("================================\n")
@@ -56,8 +58,7 @@ class game():
             self.showStatistics()
         else:
             self.uploadToApi()
-        
-            
+             
     def validateInputMenu(self, input):
         input = input.upper()
         if input not in self.inputs:
@@ -91,15 +92,28 @@ class game():
         self.difficulty = input
         return True
     
-    def updateDatabase(self):
-        self.rep.connect()
-        self.rep.deleteStatistics()
-        self.rep.insertStatistics(self.statistics)
-        self.rep.disconnect()
-    
+    def getDataFromApi(self):
+        url="http://127.0.0.1:5000/getStatistics"
+        data = requests.get(url)
+        if data != None:
+            data = data.json()
+            return data
+
     def uploadToApi(self):
-        pass
-    
+        url="http://127.0.0.1:5000/uploadData"
+        requests.post(url, json.dumps(self.statistics))
+        self.showMenu()
+
+    def calcMostPicked(self):
+        picksPlayer = self.statistics['PLAYER'][2:]
+        max = picksPlayer[0]
+        for i in picksPlayer:
+            if i > max:
+                max = i
+        for i in picksPlayer:
+            if i == max:
+                return picksPlayer.index(i)
+
     def showStatistics(self):
         #print("/[MENU]: " + str(self.statistics))
         headers = ['NAME', 'WINS', 'DRAWS'] + self.symbols
@@ -113,8 +127,15 @@ class game():
     
     def pickCompSymbol(self, symbolPlayer):
         #Leichter Modus => zufällige Wahl des Gegeners
-        if int(self.difficulty) is 1:
+        if int(self.difficulty) == 1:
             return self.symbols[randrange(0, 5)]
+        elif int(self.difficulty) == 2:
+            mostPicked = self.symbols[self.calcMostPicked()]
+            s = Symbol(mostPicked)
+            return s.getCounter()
+        else:
+            s = Symbol(symbolPlayer)
+            return s.getCounter()
     
     def handleResult(self, result, symbolP, symbolC):
         self.statistics["PLAYER"][self.symbols.index(symbolP) + 2] += 1
@@ -132,9 +153,6 @@ class game():
             print("/[MENU]/[GAME" + self.difficulty + "]: --> VERLOREN <--")
             self.winsComp += 1
             self.statistics["COMP"][0] += 1
-        
-        #Save changes to DB
-        self.updateDatabase()
     
     def exit(self):
         self.difficulty = None
