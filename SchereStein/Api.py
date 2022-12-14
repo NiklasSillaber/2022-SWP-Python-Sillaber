@@ -3,10 +3,10 @@ from flask import *
 from os.path import exists
 import pandas as pd
 import json
-#from SchereStein.RepositoryDB import RepositoryDB
+from SchereStein.RepositoryDB import RepositoryDB
 
 app = Flask(__name__)
-#rep = RepositoryDB()
+rep = RepositoryDB()
 
 @app.route('/')
 def index():
@@ -22,17 +22,17 @@ def uploadData():
     d = str(request.data)
     d = d[2:-1]
     d = json.loads(d)
-    print(d['PLAYER'][0])
-    #   rep.connect()
-    #   rep.deleteStatistics()
-    #   rep.insertStatistics(statistics)
-    #   rep.disconnect()  
+    
+    rep.connect()
+    rep.deleteStatistics()
+    rep.insertStatistics(d)
+    rep.disconnect()  
     return jsonify({"return": True})
 
 def getData():
-    # rep.connect()
-    # statistics = rep.getStatistics()
-    # rep.disconnect()
+    rep.connect()
+    statistics = rep.getStatistics()
+    rep.disconnect()
     statistics = {"PLAYER" : [1, 1, 5, 8, 5, 10, 2], "COMP" : [2, 1, 3, 3, 3, 3, 3]}
 
     dataP = {'Symbole' : 'in Prozent', 'Schere' : statistics['PLAYER'][2], 'Stein' : statistics['PLAYER'][3], 'Papier' : statistics['PLAYER'][4],

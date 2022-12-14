@@ -1,6 +1,5 @@
 import mysql.connector as db
 from sqlalchemy import null
-import errno
 
 class RepositoryDB():
     
