@@ -12,6 +12,34 @@ rep = RepositoryDB()
 def index():
     return render_template("index.html", data = getData())
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = str(request.data)
+    data = data[3:-2]
+   
+    rep.connect()
+    validate = rep.login(data)
+    rep.disconnect()
+
+    if validate:
+        return jsonify({'return': True})
+    else:
+        return jsonify({'return': False})
+
+@app.route('/updatePassword', methods=['POST'])
+def updatePwd():
+    data = str(request.data)
+    data = data[3:-2]
+   
+    rep.connect()
+    validate = rep.updatePWD(data)
+    rep.disconnect()
+
+    if validate:
+        return jsonify({'return': True})
+    else:
+        return jsonify({'return': False})
+
 @app.route('/getStatistics', methods=['GET'])
 def getStat():
     data = getData()

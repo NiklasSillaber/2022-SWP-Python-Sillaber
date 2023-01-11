@@ -29,7 +29,7 @@ class Symbol():
 class game():
     def __init__ (self):
         self.difficulty = None
-        self.inputs = ['GAME', 'STATISTICS', 'UPLOAD']
+        self.inputs = ['GAME', 'STATISTICS', 'UPLOAD', 'CHANGEPWD']
         self.difficulties = [1, 2, 3]
         self.symbols = ['SCHERE', 'STEIN', 'PAPIER', 'SPOCK', 'ECHSE']
         self.winsPlayer = 0
@@ -40,8 +40,22 @@ class game():
         
         print("\nWilkommen zum SchereStein-Spiel!")
         print("================================\n")
+
+        while True: 
+            print("/: Bitte Passwort eingeben!")
+            pwd = input('/: ')
+            
+            if pwd is '':
+                pass
+            elif self.loginApi(pwd):
+                break
+            else:
+                print("/: Falsches Passwort!")
+            
+        
+        print("/[MENU]: Korrektes Passwort :)")
+            
         self.showMenu()
-        pass
     
     def showMenu(self):
         action = ''
@@ -56,9 +70,27 @@ class game():
             self.startGame()
         elif action == 'STATISTICS':
             self.showStatistics()
-        else:
+        elif action =='UPLOAD':
             self.uploadToApi()
-             
+        else:
+            self.updatePwd()
+    
+    def updatePwd(self):
+        while True: 
+            print("/: Bitte neues Passwort eingeben!")
+            pwd = input('[MENU]/[CHANGEPWD]: ')
+            
+            if pwd is '':
+                pass
+            elif self.updateApi(pwd):
+                break
+            else:
+                print("/[MENU]/[CHANGEPWD]: Update fehlgeschlagen")
+            
+        print("/[MENU]/[CHANGEPWD]: Passwort aktualisiert :)")
+            
+        self.showMenu()
+
     def validateInputMenu(self, input):
         input = input.upper()
         if input not in self.inputs:
@@ -92,6 +124,23 @@ class game():
         self.difficulty = input
         return True
     
+    def loginApi(self, pwd):
+        url="http://127.0.0.1:5000/login"
+        data = requests.post(url, json.dumps(pwd))
+        if data != None:
+            data = data.json()
+            return data['return']
+        return False
+
+    def updateApi(self, pwd):
+        url="http://127.0.0.1:5000/updatePassword"
+        data = requests.post(url, json.dumps(pwd))
+        if data != None:
+            data = data.json()
+            return data['return']
+        return False
+
+
     def getDataFromApi(self):
         url="http://127.0.0.1:5000/getStatistics"
         data = requests.get(url)

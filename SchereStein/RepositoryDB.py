@@ -107,15 +107,53 @@ class RepositoryDB():
                     statistics = {"PLAYER" : [0, 0, 0, 0, 0, 0, 0], "COMP" : [0, 0, 0, 0, 0, 0, 0]}
                 
         return statistics 
+    
+    def login(self, inputPwd):
+        
+        if hasattr(self.con, 'is_connected'):
+            if self.con.is_connected():
+                
+                sqlstatement = 'SELECT password FROM security'
 
+                self.cursor.execute(sqlstatement)
+                result = self.cursor.fetchall()
+                #result = tuple
+                pwd = result[0][0]
 
-if __name__ == '__main__':
+                if inputPwd == pwd:
+                    return True
+                else:
+                    return False
+                
+        return False 
+
+    def updatePWD(self, pwd):
+        
+        if hasattr(self.con, 'is_connected'):
+            if self.con.is_connected():
+    
+                sqlstatement = 'update security set password = "' + pwd + '" where securityId = 1'
+                
+                try:
+                    self.cursor.execute(sqlstatement)
+                    self.con.commit()
+                    return True
+                
+                except db.IntegrityError:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+#if __name__ == '__main__':
     #statistics = {"PLAYER" : [0, 0, 0, 5, 3, 0, 0], "COMP" : [0, 2, 0, 0, 0, 0, 0]}
-    rep = RepositoryDB()
-    rep.connect()
+    # rep = RepositoryDB()
+    # rep.connect()
     #rep.insertStatistics(statistics)
     #rep.deleteStatistics()
     #stat = rep.getStatistics()
     #print(stat)
-    #rep.disconnect()
+    # print(rep.login('admin'))
+    # rep.disconnect()
     
