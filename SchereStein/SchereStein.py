@@ -34,6 +34,7 @@ class game():
         self.symbols = ['SCHERE', 'STEIN', 'PAPIER', 'SPOCK', 'ECHSE']
         self.winsPlayer = 0
         self.winsComp = 0
+        self.url = 'http://127.0.0.1:5000'
         
         self.statistics = self.getDataFromApi()
         print(self.statistics)
@@ -125,7 +126,7 @@ class game():
         return True
     
     def loginApi(self, pwd):
-        url="http://127.0.0.1:5000/login"
+        url= self.url + '/login'
         data = requests.post(url, json.dumps(pwd))
         if data != None:
             data = data.json()
@@ -133,7 +134,7 @@ class game():
         return False
 
     def updateApi(self, pwd):
-        url="http://127.0.0.1:5000/updatePassword"
+        url = self.url + "/updatePassword"
         data = requests.post(url, json.dumps(pwd))
         if data != None:
             data = data.json()
@@ -142,14 +143,14 @@ class game():
 
 
     def getDataFromApi(self):
-        url="http://127.0.0.1:5000/getStatistics"
+        url= self.url + "/getStatistics"
         data = requests.get(url)
         if data != None:
             data = data.json()
             return data
 
     def uploadToApi(self):
-        url="http://127.0.0.1:5000/uploadData"
+        url = self.url + "/uploadData"
         requests.post(url, json.dumps(self.statistics))
         self.showMenu()
 
