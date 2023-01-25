@@ -1,7 +1,10 @@
 from random import randrange
+import time
 from tabulate import tabulate
 import requests
 import json
+from GestureLib import HandGestureLib
+import cv2
 
 class Symbol():
         def __init__(self, symbol):
@@ -29,7 +32,7 @@ class Symbol():
 class game():
     def __init__ (self):
         self.difficulty = None
-        self.inputs = ['GAME', 'STATISTICS', 'UPLOAD', 'CHANGEPWD']
+        self.inputs = ['GAME', 'GESTUREGAME', 'STATISTICS', 'UPLOAD', 'CHANGEPWD']
         self.difficulties = [1, 2, 3]
         self.symbols = ['SCHERE', 'STEIN', 'PAPIER', 'SPOCK', 'ECHSE']
         self.winsPlayer = 0
@@ -46,7 +49,7 @@ class game():
             print("/: Bitte Passwort eingeben!")
             pwd = input('/: ')
             
-            if pwd is '':
+            if pwd == '':
                 pass
             elif self.loginApi(pwd):
                 break
@@ -69,6 +72,8 @@ class game():
         
         if action == 'GAME':
             self.startGame()
+        if action == 'GESTUREGAME':
+            self.startGame(gestureMode=True)
         elif action == 'STATISTICS':
             self.showStatistics()
         elif action =='UPLOAD':
@@ -81,7 +86,7 @@ class game():
             print("/: Bitte neues Passwort eingeben!")
             pwd = input('[MENU]/[CHANGEPWD]: ')
             
-            if pwd is '':
+            if pwd == '':
                 pass
             elif self.updateApi(pwd):
                 break
@@ -95,7 +100,7 @@ class game():
     def validateInputMenu(self, input):
         input = input.upper()
         if input not in self.inputs:
-            if input is '':
+            if input == '':
                 return False
             print("/[MENU]: Fehler! Geben Sie eine der folgenen Funktionen ein! " + str(self.inputs))
             return False
@@ -106,7 +111,7 @@ class game():
         symbols = self.symbols.copy()
         symbols.append('EXIT')
         if input not in symbols:
-            if input is '':
+            if input == '':
                 return False
             print("/[MENU]/[GAME" + self.difficulty + "]: Fehler! Geben Sie eines der folgenden Symbole ein! " + str(self.symbols))
             return False
@@ -115,7 +120,7 @@ class game():
     def validateInputDifficulty(self, input):
         difficultiesString = map(lambda x: str(x), self.difficulties)
         if input not in difficultiesString:
-            if input is '':
+            if input == '':
                 return False
             elif input == 'EXIT':
                 self.difficulty = input
@@ -191,11 +196,11 @@ class game():
         self.statistics["PLAYER"][self.symbols.index(symbolP) + 2] += 1
         self.statistics["COMP"][self.symbols.index(symbolC) + 2] += 1
         
-        if result is 0:
+        if result == 0:
                 print("/[MENU]/[GAME" + self.difficulty + "]: --> UNENTSCHIEDEN <--")
                 self.statistics["PLAYER"][1] += 1
                 self.statistics["COMP"][1] += 1
-        elif result is 1:
+        elif result == 1:
             print("/[MENU]/[GAME" + self.difficulty + "]: --> GEWONNEN <--")
             self.winsPlayer += 1
             self.statistics["PLAYER"][0] += 1
@@ -205,13 +210,14 @@ class game():
             self.statistics["COMP"][0] += 1
     
     def exit(self):
+
         self.difficulty = None
         self.winsPlayer = 0
         self.winsComp = 0
         print("/[MENU]:")
         self.showMenu()
     
-    def startGame(self):
+    def startGame(self, gestureMode=False):
         print("/[MENU]/[GAME]: Sie befinden sich im Spiel. Geben Sie eine Schwierigkeit ein! " + str(self.difficulties))
         
         while True: 
@@ -225,16 +231,50 @@ class game():
         print("/[MENU]/[GAME" + self.difficulty + "]: Die Schwierigkeit " + self.difficulty + " wurde gewählt!")
         print("/[MENU]/[GAME" + self.difficulty + "]: Das Spiel startet jetzt! Mit EXIT können Sie das Spiel frühzeitig beenden!")
         print("/[MENU]/[GAME" + self.difficulty + "]:")
+
+        if gestureMode:
+            handDetector = HandGestureLib()
+            cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1200)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
         
         while True:
             print("/[MENU]/[GAME" + self.difficulty + "]: PLAYER " + str(self.winsPlayer) + " | " + str(self.winsComp) + " COMP")
             print("/[MENU]/[GAME" + self.difficulty + "]: Geben Sie ihr Symbol ein! " + str(self.symbols))
             
-            while True: 
-                symbolPlayer = input('/[MENU]/[GAME' + self.difficulty + ']: ').upper()
-                if self.validateInputGame(symbolPlayer):
-                    break
-                
+            if not gestureMode:
+                while True: 
+                    symbolPlayer = input('/[MENU]/[GAME' + self.difficulty + ']: ').upper()
+                    if self.validateInputGame(symbolPlayer):
+                        break
+            
+            else:
+                while True:
+                    if cap.isOpened():
+                        success, image = cap.read()
+
+                        image = handDetector.findHands(image)
+                        recognizedHandGesture = handDetector.findGesture(image)
+                        
+                        if recognizedHandGesture != None:
+                            symbolPlayer = recognizedHandGesture
+                            break
+                        
+                        cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+
+                        if cv2.waitKey(5) & 0xFF == 27:
+                            symbolPlayer = 'EXIT'
+                            cap.release()
+                            break
+
+                        cv2.waitKey(1)
+
+                    else:
+                        print('error')
+                        symbolPlayer = 'EXIT'
+                        cap.release()
+                        break
+    
             if symbolPlayer == 'EXIT':
                 break
             
@@ -244,6 +284,9 @@ class game():
             result = symbolPlayer_obj.playAgainst(symbolComp)
             self.handleResult(result, symbolPlayer, symbolComp)
             print("/[MENU]/[GAME" + self.difficulty + "]:")
+
+            if gestureMode:
+                time.sleep(2)
         
         self.exit()
     
