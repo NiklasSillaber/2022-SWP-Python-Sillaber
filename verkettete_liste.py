@@ -29,9 +29,3 @@ class EinfachVerketteteListe:
         newElem, nextElem = ListElement(newItem)
 
 
-
-
-
-
-
-
