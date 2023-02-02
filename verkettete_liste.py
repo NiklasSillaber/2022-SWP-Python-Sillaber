@@ -1,188 +1,198 @@
 import random
 
-
 class ListElement:
     def __init__(self,obj):
         self.obj = obj
         self.nextElem = None
 
-    def setNextElement(self,next):
+    def setNextElem(self,next):
         self.nextElem = next
 
-    def getNextElement(self):
+    def getNextElem(self):
         return self.nextElem
     
-    def getObject(self):
+    def getObj(self):
         return self.obj
 
-class OwnList:
-    first = ListElement(None)
+class VerketteteListe:
+
+    head = ListElement(None)
 
     def getLast(self):
-        i = self.first
-        while i.getNextElement() is not None:
-            i = i.getNextElement()
-        return i
+        curElem = self.head #Am Anfang Header als letztes Elem
 
-    def add(self, obj):
-        newElement = ListElement(obj)
-        if self.first.getObject() is None:
-            self.first = newElement
-            return
-        lastElement = self.getLast()
-        lastElement.setNextElement(newElement)
+        while curElem.getNextElem() != None: #Schauen so lange nächstes Elem None
+            curElem = curElem.getNextElem()
+        return curElem
+
+    def isEmpty(self):
+        return self.head.getObj() == None
 
     def __len__(self):
         length = 0
-        help = self.first
-        if self.first is None:
-            return 0
-        while help is not None:
+        curElem = self.head #beim Head starten
+
+        while curElem != None:
             length += 1
-            help = help.getNextElement()
+            curElem = curElem.getNextElem() #nextElem beim ListElem default Null ==> keine OutOfBounds
         return length
 
     def getAllElements(self):
-        help = self.first
-        allElements = '['
-        while help is not None:
-            allElements+=str(help.obj)+','
-            help = help.getNextElement()
-        allElements = allElements[:-1]
-        return allElements+"]"
+        elements = '['
+        curElem = self.head #beim Head starten
+
+        while curElem != None:
+            elements += str(curElem.obj)+', '
+            curElem = curElem.getNextElem()
+
+        elements = elements[:-2] #letztes Komma löschen
+        return elements + ']'
+
+    def addElem(self, obj):
+        newElem = ListElement(int(obj))
+
+        if self.head.getObj() == None:  #Wenn kein Head vorhanden
+            self.head = newElem
+            return
+        #Ansonsten Hinten dranhängen
+        self.getLast().setNextElem(newElem)
     
-    def delete(self,object):
-        el = self.first
-        next = el.getNextElement()
+    def deleteValue(self, delElem): #Alle Elemente die auf gleiche Instanz zeigen löschen
+        curElem = self.head
+        nextElem = curElem.getNextElem()
 
-        if el.getObject() == object:
-            self.first = self.first.getNextElement()
+        if curElem.getObj() == int(delElem): #Soll head gelöscht werden?
+            self.head = nextElem
 
-        while next is not None:
-            if next.getObject() == object:
-                if next.getNextElement() is not None :
-                    while next.getNextElement().getObject() == object:
-                        next = next.getNextElement()
-                    el.setNextElement(next.getNextElement())
+        while nextElem != None:
+
+            if nextElem.getObj() == delElem:
+
+                if nextElem.getNextElem() != None:
+
+                    while nextElem.getNextElem().getObj() == delElem:
+                        nextElem = nextElem.getNextElem()
+
+                    curElem.setNextElem(nextElem.getNextElem())
                 else:
-                    el.setNextElement(None)
-            el = el.getNextElement()
-            if el == None:
+                    curElem.setNextElem(None)
+
+            if curElem.getNextElem() == None: #Abbruchbedingung
                 return
-            next = el.getNextElement()
 
-    def getItem(self, obj):
-        le = self.first
-        while le != None: 
-            if le.getObject() == int(obj):
+            nextElem = curElem.getNextElem()
+
+    def contains(self, value): #Schaun ob bestimmtes Item in der Liste ist
+        curElem = self.head
+
+        while curElem != None: 
+            if curElem.getObj() == int(value):
                 return True
-            le = le.getNextElement()
-    
-    def getItemByIndex(self,index):
-        el = self.first
-        for i in range(int(index)):
-            el = el.getNextElement()
-        return el.getObject()
 
-    def getIndex(self,obj):
-        el = self.first
-        i = 0
-        while el.getObject() != obj:
-            if el.getNextElement() != None:
-                el = el.getNextElement()
-                i+=1
+            curElem = curElem.getNextElem()
+        return False
+
+    def indexOf(self, value):
+        curElem = self.head
+        idx = 0
+
+        while curElem.getObj() != int(value):
+
+            if curElem.getNextElem() != None:
+                curElem = curElem.getNextElem()
+                idx += 1
             else:
-                i = "NOT IN LIST"
-                return i
-        return i
-    
-    def getStart(self):
-        return self.first.getObject()
-    
-    def getEnd(self):
-        el = self.first
-        while el.getNextElement() != None:
-            el=el.getNextElement()
-        return el.getObject()
-    
-    def isEmpty(self):
-        if self.first.getObject() is None:
-            return True
+                return -1
 
-    def addByIndex(self,index,obj): 
-        obj = ListElement(obj)
-        if index > len(self):
-            print("INDEX out of range")
-        current = self.first
-        count = 0
-        while current is not None:
-            if count == index-1:
-                current.nextElem, obj.nextElem = obj, current.nextElem
-                break
-            current = current.nextElem
-            count +=1
+        return idx
+    
+    def getItemAtIndex(self, idx):
+        idx = int(idx)
+        curElem = self.head
+
+        if idx > len(self) - 1:
+            raise Exception("Index out of Bounds")
+
+        for i in range(idx): #geht nur bis idx -1
+            curElem = curElem.getNextElem()
+
+        return curElem.getObj()
+
+    def addAtIndex(self, idx, value): 
+        addElem = ListElement(int(value))
+        curElem = self.head
+        help = 0
+        idx = int(idx) - 1
+
+        if idx > len(self):
+            raise Exception("Index out of Bounds")
+
+        while help != idx:
+            curElem = curElem.getNextElem()
+            help +=1
+        
+        curElem.nextElem, addElem.nextElem = addElem, curElem.nextElem
+
+    def getFirstElem(self):
+        return self.head.getObj()
+
+    def getLastElem(self):
+        curElem = self.head #Am Anfang Header als letztes Elem
+
+        while curElem.getNextElem() != None: #Schauen so lange nächstes Elem None
+            curElem = curElem.getNextElem()
+        return curElem.getObj()
 
 def main():
-    l = OwnList()
+    myList = VerketteteListe()
 
-    for i in range(100):
-        l.add(random.randint(0,10))
+    length = int(input("Länge: "))
 
-    i = l.getAllElements()
-    print("Liste: ")
-    print(i)
+    for i in range(length):
+        myList.addElem(random.randint(0,10))
+
+    print(myList.getAllElements())
+    print()
+
+    print("Länge: " + str(len(myList)))
+    print()
+
+    print("Erstes Element " + str(myList.getFirstElem()))
+    print("Letztes Element " + str(myList.getLastElem()))
+    print()
+
+    searchElem = input("contains: ")
+    print(myList.contains(searchElem))
+    print()
+
+     
+    print("isEmpty: " + str(myList.isEmpty()))
+    print()
+
+    searchElem = input("indexOf: ")
+    print(myList.indexOf(searchElem))
+    print()
+
+    searchIdx = input("getItemAtIndex: ")
+    print(myList.getItemAtIndex(searchIdx))
+    print()
     
+    print(myList.getAllElements())
     print()
-    auswahl = input("Welchen Wert möchtest du löschen? ")
-    l.delete(int(auswahl))
 
+    print("addItemAtIndex")
+    print("==============")
+    setIdx = input("Idx: ")
+    setElem = input("Item: ")
+    myList.addAtIndex(setIdx, setElem)
     print()
-    a = l.getAllElements()
-    print("Liste: ")
-    print(a)
-    
+    print(myList.getAllElements())
     print()
-    print("Länge der Liste: ")
-    print(len(l))
-    
-    print()
-    print("getItem: ")
-    find = input("Welchen Wert möchtest du finden? ")
-    if l.getItem(find) is True:
-        print("Ist Bestandteil der Liste")
-    else:
-        print("Ist nicht Bestandteil der Liste")
-    
-    print()
-    print("getItemByIndex: ")
-    find1 = input("Index von zu holendem Item: ")
-    print(l.getItemByIndex(find1))
 
+    delElem = int(input("deleteValue: "))
+    myList.deleteValue(delElem)
     print()
-    print("getIndex: ")
-    find2 = input("Item: ")
-    print(l.getIndex(int(find2)))
-
-    print()
-    print("getStart and getEnd: ")
-    print(l.getStart())
-    print(l.getEnd())
-
-    print()
-    print("isEmpty: ")
-    if l.isEmpty() is True:
-        print("leere Liste")
-    else:
-        print("befüllte Liste")
-
-    print()
-    print("addByIndex: ")
-    find3 = input("An welchen Index möchtest du das Item einfügen? ")
-    find4 = input("Welches Item möchtest du einfügen? ")
-    l.addByIndex(int(find3),int(find4))
-    y = l.getAllElements()
-    print("Liste: ")
-    print(y)
+    print(myList.getAllElements())
 
 if __name__ == '__main__':
     main()
