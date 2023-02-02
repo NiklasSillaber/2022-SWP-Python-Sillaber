@@ -57,30 +57,25 @@ class VerketteteListe:
         #Ansonsten Hinten dranhängen
         self.getLast().setNextElem(newElem)
     
-    def deleteValue(self, delElem): #Alle Elemente die auf gleiche Instanz zeigen löschen
-        curElem = self.head
-        nextElem = curElem.getNextElem()
+    def deleteValue(self, delElem):
+        el = self.head
+        next = el.getNextElem()
 
-        if curElem.getObj() == int(delElem): #Soll head gelöscht werden?
-            self.head = nextElem
+        if el.getObj() == delElem:   #Muss Head gelöscht werden
+            self.head = self.head.getNextElem()
 
-        while nextElem != None:
-
-            if nextElem.getObj() == delElem:
-
-                if nextElem.getNextElem() != None:
-
-                    while nextElem.getNextElem().getObj() == delElem:
-                        nextElem = nextElem.getNextElem()
-
-                    curElem.setNextElem(nextElem.getNextElem())
+        while next is not None:
+            if next.getObj() == delElem:
+                if next.getNextElem() is not None :
+                    while next.getNextElem().getObj() == delElem:
+                        next = next.getNextElem()
+                    el.setNextElem(next.getNextElem())
                 else:
-                    curElem.setNextElem(None)
-
-            if curElem.getNextElem() == None: #Abbruchbedingung
+                    el.setNextElem(None)
+            el = el.getNextElem()
+            if el == None:
                 return
-
-            nextElem = curElem.getNextElem()
+            next = el.getNextElem()
 
     def contains(self, value): #Schaun ob bestimmtes Item in der Liste ist
         curElem = self.head
