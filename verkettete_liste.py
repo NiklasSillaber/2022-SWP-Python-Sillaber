@@ -138,6 +138,65 @@ class VerketteteListe:
             curElem = curElem.getNextElem()
         return curElem.getObj()
 
+    '''
+    def sort(self):
+        #Insertionsort ist am effektivsten
+        curElem = self.head
+        elemBefore = None
+
+        if curElem == None:
+            return
+
+        while curElem.getNextElem() != None:
+            print(curElem.getObj())
+            if curElem.getObj() > curElem.getNextElem().getObj():
+                nextElem = curElem.getNextElem()
+                print(nextElem.getObj())
+
+                if elemBefore != None: #Muss Head getauscht werden?
+                    print(elemBefore.getObj())
+                    elemBefore.setNextElem(nextElem)
+
+                curElem.setNextElem(nextElem.getNextElem()) #Kann auch None sein
+                print(type(curElem.getNextElem()))
+                nextElem.setNextElem(curElem)
+                
+                curElem = self.head
+            else:
+                if curElem == self.head:
+                    elemBefore = None
+                else:
+                    elemBefore = curElem
+                curElem = curElem.getNextElem()
+    '''
+
+    def sort(self):
+        sorted = None
+        current = self.head
+        while (current != None):
+            next = current.getNextElem()
+            sorted = self.sorted_insert(sorted, current)
+            current = next
+        self.head = sorted
+
+    def sorted_insert(self, head_ref, new_element):
+        current = None
+        if head_ref == None or (head_ref).getObj() >= new_element.getObj():
+            new_element.setNextElem(head_ref)
+            head_ref = new_element
+        else:
+            current = head_ref
+            while current.getNextElem() != None and current.getNextElem().getObj() < new_element.getObj():
+                current = current.getNextElem()
+            new_element.setNextElem(current.getNextElem())
+            current.setNextElem(new_element)
+        return head_ref
+
+    #def reverse(self):
+    # ...
+    # ...
+    # ...
+
 def main():
     myList = VerketteteListe()
 
@@ -188,6 +247,13 @@ def main():
     myList.deleteValue(delElem)
     print()
     print(myList.getAllElements())
+    print()
+
+    print("insertion-sort")
+    print()
+    myList.sort()
+    print(myList.getAllElements())
+
 
 if __name__ == '__main__':
     main()
