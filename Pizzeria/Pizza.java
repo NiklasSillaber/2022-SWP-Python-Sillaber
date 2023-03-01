@@ -1,71 +1,127 @@
 public interface Pizza {
 
-    Pizza(String ort);
+    void backen();
 
-    String backen(){};
+    void schneiden();
 
-    String schneiden(){};
-
-    String einpacken(){};
+    void einpacken();
 
 }
 
-class Salamipizza implements Pizza {
+//Berliner Pizzen
+
+class BerlinSalami implements Pizza {
 
     @Override
-    public
-
-    @Override
-    public String backen(){
-        return "Salamipizza wird gebacken"
+    public void backen() {
+        System.out.println( "BerlinSalami wird gebacken");
     }
 
     @Override
-    public String schneiden(){
-        return "Salamipizza wird geschnitten"
+    public void schneiden(){
+        System.out.println( "BerlinSalami wird geschnitten");
     }
 
     @Override
-    public String einpacken(){
-        return "Salamipizza wird eingepackt"
+    public void einpacken(){
+        System.out.println( "BerlinSalami wird eingepackt");
     }
 
 }
 
-class Calzonepizza implements Pizza {
+class BerlinCalzone implements Pizza {
 
     @Override
-    public String backen(){
-        return "Calzonepizza wird gebacken"
+    public void backen(){
+        System.out.println( "BerlinCalzone wird gebacken");
     }
 
     @Override
-    public String schneiden(){
-        return "Calzonepizza wird geschnitten"
+    public void schneiden(){
+        System.out.println( "BerlinCalzone wird geschnitten");
     }
 
     @Override
-    public String einpacken(){
-        return "Calzonepizza wird eingepackt"
+    public void einpacken(){
+        System.out.println( "BerlinCalzone wird eingepackt");
     }
 
 }
 
-class Hawaiipizza implements Pizza {
+class BerlinHawaii implements Pizza {
 
     @Override
-    public String backen(){
-        return "Hawaiipizza wird gebacken"
+    public void backen(){
+        System.out.println( "BerlinHawaii wird gebacken");
     }
 
     @Override
-    public String schneiden(){
-        return "Hawaiipizza wird geschnitten"
+    public void schneiden(){
+        System.out.println( "BerlinHawaii wird geschnitten");
     }
 
     @Override
-    public String einpacken(){
-        return "Hawaiipizza wird eingepackt"
+    public void einpacken(){
+        System.out.println( "BerlinHawaii wird eingepackt");
+    }
+
+}
+
+//Hamburg Pizzen
+
+class HamburgSalami implements Pizza {
+
+    @Override
+    public void backen(){
+        System.out.println( "HamburgSalami wird gebacken");
+    }
+
+    @Override
+    public void schneiden(){
+        System.out.println( "HamburgSalami wird geschnitten");
+    }
+
+    @Override
+    public void einpacken(){
+        System.out.println( "HamburgSalami wird eingepackt");
+    }
+
+}
+
+class HamburgCalzone implements Pizza {
+
+    @Override
+    public void backen(){
+        System.out.println( "HamburgCalzone wird gebacken");
+    }
+
+    @Override
+    public void schneiden(){
+        System.out.println( "HamburgCalzone wird geschnitten");
+    }
+
+    @Override
+    public void einpacken(){
+        System.out.println( "HamburgCalzone wird eingepackt");
+    }
+
+}
+
+class HamburgHawaii implements Pizza {
+
+    @Override
+    public void backen(){
+        System.out.println("HamburgHawaii wird gebacken");
+    }
+
+    @Override
+    public void schneiden(){
+        System.out.println( "HamburgHawaii wird geschnitten");
+    }
+
+    @Override
+    public void einpacken(){
+        System.out.println( "HamburgHawaii wird eingepackt");
     }
 
 }
