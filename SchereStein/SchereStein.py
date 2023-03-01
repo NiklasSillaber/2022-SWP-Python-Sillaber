@@ -13,7 +13,7 @@ class Symbol():
             self.symbols = ['STEIN', 'ECHSE', 'SPOCK', 'SCHERE', 'PAPIER']
             
             leftSymbols = list(filter(lambda x: self.symbols.index(x) < self.symbols.index(self.symbol), self.symbols))
-            rightSymbols = list(filter(lambda x: self.symbols.index(x) > self.symbols.index(self.symbol), self.symbols))
+            rightSymbols = list(filter(lambda x: self.symbols.index(x) > self.symbols.index(self.symbol), self.symbols)) 
             self.otherSymbols = rightSymbols + leftSymbols
             #print(self.otherSymbols)      bei SPOCK =>  [SCHERE, PAPIER, STEIN, ECHSE]
             
