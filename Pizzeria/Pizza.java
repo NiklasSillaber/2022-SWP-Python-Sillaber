@@ -1,5 +1,7 @@
 public interface Pizza {
 
+    Pizza(String ort);
+
     String backen(){};
 
     String schneiden(){};
@@ -8,7 +10,10 @@ public interface Pizza {
 
 }
 
-class Salami implements Pizza {
+class Salamipizza implements Pizza {
+
+    @Override
+    public
 
     @Override
     public String backen(){
@@ -27,40 +32,40 @@ class Salami implements Pizza {
 
 }
 
-class Calzone implements Pizza {
+class Calzonepizza implements Pizza {
 
     @Override
     public String backen(){
-        return "Calzone wird gebacken"
+        return "Calzonepizza wird gebacken"
     }
 
     @Override
     public String schneiden(){
-        return "Calzone wird geschnitten"
+        return "Calzonepizza wird geschnitten"
     }
 
     @Override
     public String einpacken(){
-        return "Calzone wird eingepackt"
+        return "Calzonepizza wird eingepackt"
     }
 
 }
 
-class Hawaii implements Pizza {
+class Hawaiipizza implements Pizza {
 
     @Override
     public String backen(){
-        return "Hawaii wird gebacken"
+        return "Hawaiipizza wird gebacken"
     }
 
     @Override
     public String schneiden(){
-        return "Hawaii wird geschnitten"
+        return "Hawaiipizza wird geschnitten"
     }
 
     @Override
     public String einpacken(){
-        return "Hawaii wird eingepackt"
+        return "Hawaiipizza wird eingepackt"
     }
 
 }
