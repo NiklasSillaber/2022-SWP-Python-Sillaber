@@ -17,11 +17,15 @@ stop = 'Finanzamt'
 
 allStops = requests.get("https://smartinfo.ivb.at/api/JSON/STOPS").json()
 
+#print(allStops)
+
 for s in allStops:
     if s['stop']['name'] == stop:
         id = s['stop']['uid']
 
 departures = requests.get(f"https://smartinfo.ivb.at/api/JSON/PASSAGE?stopID={id}").json()
+
+#print(departures)
 
 for d in departures:
     print(d)
