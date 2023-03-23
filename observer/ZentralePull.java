@@ -1,5 +1,3 @@
-package Patterns.ObserverPattern;
-
 public class ZentralePull extends MessstationPull {
     private Wetter aktuellesWetter; 
 

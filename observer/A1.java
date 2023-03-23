@@ -1,5 +1,3 @@
-package Patterns.ObserverPattern;
-
 public class A1 implements Abonnent {
 
     @Override

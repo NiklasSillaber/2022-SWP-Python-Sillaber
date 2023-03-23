@@ -1,5 +1,3 @@
-package Patterns.ObserverPattern;
-
 public class A2 implements AbonnentPull {
 
     private ZentralePull zentrale;

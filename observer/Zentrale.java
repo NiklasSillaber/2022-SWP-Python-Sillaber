@@ -1,6 +1,5 @@
-package Patterns.ObserverPattern;
-
 public class Zentrale extends Messstation {
+    
     private Wetter aktuellesWetter; 
 
     public void setAktuellesWetter(Wetter aktuellesWetter) { 
