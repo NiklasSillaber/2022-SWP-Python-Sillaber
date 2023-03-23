@@ -15,5 +15,5 @@ public abstract class Messstation {
         for (Abonnent abonnent : abonnentenListe) { 
             abonnent.erhalteWetter(wetter); 
         } 
-    } 
+    }
 }
