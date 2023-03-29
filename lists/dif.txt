@@ -1,0 +1,12 @@
+                    Linked List         Double Linked List          ArrayList
+getLast                 n                       1                       1 (n wenn durchiteriert wird)
+add                     n                       1                       n
+len                     n                       n                       n
+getAllElements          n                       n                       n
+delete                  n                       n                       n
+getItem                 n                       n                       n
+getItemByIndex          n                       n                       1 (n wenn durchiteriert wird)
+getIndex                n                       n                       n
+getStart                1                       1                       1
+isEmpty                 1                       1                       1
+addByIndex              n                       1                       1 (n wenn durchiteriert wird)
