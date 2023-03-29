@@ -1,6 +1,5 @@
 import random
 
-
 class ArrayList(): 
     def __init__(self):
         self.arr = []
@@ -45,7 +44,7 @@ class ArrayList():
     def getIndex(self,obj):
         return self.arr.index(obj)
     
-    def getStart(self):
+    def getFirst(self):
         return self.arr[0]
     
     def isEmpty(self):
@@ -64,8 +63,13 @@ def main():
         a.add(random.randint(0,10))
 
     i = a.getAllElements()
-    print("Liste: ")
+    print("List: ")
     print(i)
+
+    print()
+    print("getFirst and getLast: ")
+    print(a.getFirst())
+    print(a.getLast())
 
     print()
     auswahl = input("Which value do you want to delete?")
@@ -99,11 +103,6 @@ def main():
     print(a.getIndex(int(find2)))
 
     print()
-    print("getStart and getLast: ")
-    print(a.getStart())
-    print(a.getLast())
-
-    print()
     print("isEmpty: ")
     if a.isEmpty() is True:
         print("True")
@@ -116,7 +115,7 @@ def main():
     find4 = input("value")
     a.addByIndex(int(find3),int(find4))
     y = a.getAllElements()
-    print("Liste: ")
+    print("List: ")
     print(y)
 
 if __name__ == '__main__':
