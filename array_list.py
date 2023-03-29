@@ -5,7 +5,14 @@ class ArrayList():
     def __init__(self):
         self.arr = []
         self.size = 10
-
+    
+    def getAllElements(self):
+        allElements = '['
+        for i in self.arr:
+            allElements+=str(i)+', '
+        allElements = allElements[:-2]
+        return allElements +"]"
+    
     def add(self, elem):
         self.arr.append(elem)
         if len(self.arr) < self.size:
@@ -26,21 +33,14 @@ class ArrayList():
                 l += 1
         return l
     
-    def getLast(self):
-        return self.arr[-1]
-    
-    def getAllElements(self):
-        allElements = '['
-        for i in self.arr:
-            allElements+=str(i)+', '
-        allElements = allElements[:-2]
-        return allElements +"]"
-    
     def getItem(self, obj):
         return self.arr.__contains__(obj)
     
     def getItemByIndex(self,index):
         return self.arr[index]
+    
+    def getLast(self):
+        return self.arr[-1]
     
     def getIndex(self,obj):
         return self.arr.index(obj)
