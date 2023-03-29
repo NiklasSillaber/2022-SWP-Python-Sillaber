@@ -14,7 +14,7 @@ class ListElement:
     def getObj(self):
         return self.obj
 
-class VerketteteListe:
+class VerketteteListe():
 
     def __init__(self):
         self.head = ListElement(None)
