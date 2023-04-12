@@ -4,119 +4,115 @@ class ArrayList():
     def __init__(self):
         self.arr = []
         self.size = 10
+
+    def len1(self):
+        return(len(self.arr))
+
+    def getFirstElem(self):
+        return self.arr[0]
+
+    def getLastElem(self):
+        return self.arr[-1]
     
     def getAllElements(self):
         allElements = '['
+
         for i in self.arr:
-            allElements+=str(i)+', '
+            allElements += str(i)+', '
         allElements = allElements[:-2]
-        return allElements +"]"
+
+        return allElements + "]"
     
-    def add(self, elem):
+    def addElem(self, elem):
         self.arr.append(elem)
         if len(self.arr) < self.size:
             return True
         else: 
             self.size *= 2
 
-    def delete(self, elem):  
+    def deleteAllOcurrences(self, elem):  
         while self.arr.__contains__(elem):
             self.arr.remove(elem)
         if len(self.arr) <= self.size/2:  
             self.size /= 2
-
-    def __len__(self):
-        l = 0
-        for i in self.arr:
-            if i is not None:
-                l += 1
-        return l
     
-    def getItem(self, obj):
+    def contains1(self, obj):
         return self.arr.__contains__(obj)
     
-    def getItemByIndex(self,index):
+    def getItemAtIndex(self,index):
         return self.arr[index]
     
-    def getLast(self):
-        return self.arr[-1]
-    
-    def getIndex(self,obj):
+    def indexOf(self,obj):
         return self.arr.index(obj)
-    
-    def getFirst(self):
-        return self.arr[0]
     
     def isEmpty(self):
         if self.arr is []:
             return True
+        return False
 
-    def addByIndex(self,index,obj): 
+    def addAtIndex(self,index,obj): 
         self.arr.insert(index,obj)
         if len(self.arr) >= self.size:
             self.size *= 2
 
+    def sort1(self):
+        self.arr.sort()
+
 def main():
-    a = ArrayList()
+    myList = ArrayList()
 
-    for i in range(100):
-        a.add(random.randint(0,10))
+    length = int(input("Länge: "))
 
-    i = a.getAllElements()
-    print("List: ")
-    print(i)
+    for i in range(length):
+        myList.addElem(random.randint(0,10))
 
+    print(myList.getAllElements())
     print()
-    print("getFirst and getLast: ")
-    print(a.getFirst())
-    print(a.getLast())
 
+    print("Länge: " + str(myList.len1()))
     print()
-    auswahl = input("Which value do you want to delete?")
-    a.delete(int(auswahl))
 
+    print("Erstes Element " + str(myList.getFirstElem()))
+    print("Letztes Element " + str(myList.getLastElem()))
     print()
-    i = a.getAllElements()
-    print("List: ")
-    print(i)
+
+    searchElem = int(input("contains: "))
+    print(myList.contains1(searchElem))
+    print()
+
+    print("isEmpty: " + str(myList.isEmpty()))
+    print()
+
+    searchElem = int(input("indexOf: "))
+    print(myList.indexOf(searchElem))
+    print()
+
+    searchIdx = int(input("getItemAtIndex: "))
+    print(myList.getItemAtIndex(searchIdx))
+    print()
     
+    print(myList.getAllElements())
     print()
-    print("Länge: ")
-    print(len(a))
+
+    print("addItemAtIndex")
+    print("==============")
+    setIdx = int(input("Idx: "))
+    setElem = int(input("Item: "))
+    myList.addAtIndex(setIdx, setElem)
+    print()
+    print(myList.getAllElements())
+    print()
+
+    delElem = int(input("deleteAllOcurrences: "))
+    myList.deleteAllOcurrences(delElem)
+    print()
+    print(myList.getAllElements())
+    print()
+
+    print("sort")
+    myList.sort1()
     
-    print()
-    print("getItem: ")
-    find = input("contains <value>? ")
-    if a.getItem(find) is True:
-        print("True")
-    else:
-        print("False")
-    
-    print()
-    print("getItemByIndex: ")
-    find1 = input("Get Index of item: ")
-    print(a.getItemByIndex(int(find1)))
-
-    print()
-    print("getIndex: ")
-    find2 = input("Item: ")
-    print(a.getIndex(int(find2)))
-
-    print()
-    print("isEmpty: ")
-    if a.isEmpty() is True:
-        print("True")
-    else:
-        print("False")
-
-    print()
-    print("addByIndex: ")
-    find3 = input("IDX")
-    find4 = input("value")
-    a.addByIndex(int(find3),int(find4))
-    y = a.getAllElements()
-    print("List: ")
-    print(y)
+    print(myList.getAllElements())
 
 if __name__ == '__main__':
     main()

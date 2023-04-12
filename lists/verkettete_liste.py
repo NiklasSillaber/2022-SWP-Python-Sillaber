@@ -1,5 +1,6 @@
 import random
 
+#ListElem
 class ListElement:
     def __init__(self,obj):
         self.obj = obj
@@ -18,17 +19,16 @@ class VerketteteListe():
 
     def __init__(self):
         self.head = ListElement(None)
-    
 
+    def isEmpty(self):
+        return self.head.getObj() == None
+    
     def getLast(self):
         curElem = self.head #Am Anfang Header als letztes Elem
 
         while curElem.getNextElem() != None: #Schauen so lange nächstes Elem None
             curElem = curElem.getNextElem()
         return curElem
-
-    def isEmpty(self):
-        return self.head.getObj() == None
 
     def __len__(self):
         length = 0
@@ -59,7 +59,7 @@ class VerketteteListe():
         #Ansonsten Hinten dranhängen
         self.getLast().setNextElem(newElem)
     
-    def deleteValue(self, delElem):
+    def deleteAllOcurrences(self, delElem):
         el = self.head
         next = el.getNextElem()
 
@@ -89,7 +89,7 @@ class VerketteteListe():
             curElem = curElem.getNextElem()
         return False
 
-    def indexOf(self, value):
+    def indexOf(self, value):   #index of first occurrence
         curElem = self.head
         idx = 0
 
@@ -140,39 +140,7 @@ class VerketteteListe():
             curElem = curElem.getNextElem()
         return curElem.getObj()
 
-    '''
-    def sort(self):
-        #Insertionsort ist am effektivsten
-        curElem = self.head
-        elemBefore = None
-
-        if curElem == None:
-            return
-
-        while curElem.getNextElem() != None:
-            print(curElem.getObj())
-            if curElem.getObj() > curElem.getNextElem().getObj():
-                nextElem = curElem.getNextElem()
-                print(nextElem.getObj())
-
-                if elemBefore != None: #Muss Head getauscht werden?
-                    print(elemBefore.getObj())
-                    elemBefore.setNextElem(nextElem)
-
-                curElem.setNextElem(nextElem.getNextElem()) #Kann auch None sein
-                print(type(curElem.getNextElem()))
-                nextElem.setNextElem(curElem)
-                
-                curElem = self.head
-            else:
-                if curElem == self.head:
-                    elemBefore = None
-                else:
-                    elemBefore = curElem
-                curElem = curElem.getNextElem()
-    '''
-
-    def sort(self):
+    def sort(self): #insertion sort
         sorted = None
         current = self.head
         while (current != None):
@@ -193,11 +161,6 @@ class VerketteteListe():
             new_element.setNextElem(current.getNextElem())
             current.setNextElem(new_element)
         return head_ref
-
-    #def reverse(self):
-    # ...
-    # ...
-    # ...
 
 def main():
     myList = VerketteteListe()
@@ -245,8 +208,8 @@ def main():
     print(myList.getAllElements())
     print()
 
-    delElem = int(input("deleteValue: "))
-    myList.deleteValue(delElem)
+    delElem = int(input("deleteAllOcurrences: "))
+    myList.deleteAllOcurrences(delElem)
     print()
     print(myList.getAllElements())
     print()

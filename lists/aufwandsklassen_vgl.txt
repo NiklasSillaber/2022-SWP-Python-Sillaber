@@ -1,0 +1,48 @@
+Diese Aufwandsklassen gelten für den Worst-Case    
+     
+                Single Linked List         Double Linked List          ArrayList
+isEmpty                 1                       1                       1
+_len_                   n                       n                       1
+getAllElements          n                       n                       n
+addElem                 n                       1                       1
+deleteAllOcurrences     n                       n                       n
+contains                n                       n                       n
+indexOf                 n                       n                       n
+getItemAtIndex          n                       n                       1
+addAtIndex              n                       n                       n
+getFirstElem            1                       1                       1
+getLastElem             n                       1                       1
+sort (insertion)        n²                      n²                      n * log(n)
+
+
+Erklärung
+=========
+
+-----Linked-----
+
+Bei linked list müssen meistens alle Elemente durchgegangen werden, bis das richtige ListElement gefunden wurde.
+==> kein direkter Zugriff über Index
+==> durchiterieren
+
+addElem n weil getLast aufgerufen wird
+
+getItemAtIndex nur dann n wenn letztes Element gefragt ist
+addAtIndex wenn hinten zugefügt werden soll
+
+insertion sort im worstcase n² - so schlecht -> kein Unterschied zwischen den Verfahren
+
+-----double Linked-----
+
+Durch den Tail, der jetzt bekannt ist, können gewisse Abfragen direkt gemacht werden.
+==> manchmal direkt (1)
+==> Trotzdem oft iterieren (n)
+
+-----arraylist-----
+
+len ist aufwandsklasse 1 und unabhängig von länge, len wird als variable gespeichert
+
+contains ist n
+
+addAtIndex ist n weil alle Elemente danach geschifftet werden
+
+der interne sort hat n * log(n) aufwandsklasse

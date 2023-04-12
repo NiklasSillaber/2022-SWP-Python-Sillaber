@@ -32,16 +32,9 @@ class DoppeltVerketteteListe:
 
     def getFirstElem(self):
         return self.head.getObj()
-
-    def getLast(self):
-        curElem = self.head #Am Anfang Header als letztes Elem
-
-        while curElem.getNextElem() != None: #Schauen so lange nächstes Elem None
-            curElem = curElem.getNextElem()
-        return curElem
     
     def getLastElem(self):
-        return self.getLast().getObj()
+        return self.tail.getObj()
     
     def isEmpty(self):
         return self.head.getObj() == None
@@ -54,7 +47,6 @@ class DoppeltVerketteteListe:
             length += 1
             curElem = curElem.getNextElem() #nextElem beim ListElem default Null ==> keine OutOfBounds
         return length
-
     
     def getAllElements(self):
         elements = '['
@@ -71,24 +63,17 @@ class DoppeltVerketteteListe:
         
         newElem = ListElement(int(obj))
 
-        if self.head.getObj() == None:  #Wenn kein Head vorhanden
+        if self.tail.getObj() == None:  #Wenn kein Head vorhanden
             self.head = newElem
-            self.head.setNextElem(self.tail)
-            self.tail.setPrevElem(self.head)
+            self.tail = newElem
             return
 
-        if self.tail.getObj() == None:  #Wenn kein tail vorhanden
-            self.tail = newElem
-            self.tail.setPrevElem(self.head)
-            self.head.setNextElem(self.tail)
-            return
-        
         #Ansonsten Hinten dranhängen
-        lastElem = self.getLast()
-        lastElem.setNextElem(newElem)
-        newElem.setPrevElem(lastElem)
+        self.tail.setNextElem(newElem)
+        self.tail.setPrevElem(self.tail)
+        self.tail = self.tail.getNextElem()
     
-    def delete(self, elem):
+    def deleteAllOcurrences(self, elem):
         start = self.head
 
         if elem == start.getObj():
@@ -214,8 +199,8 @@ def main():
     print("Letztes Element " + str(myList.getLastElem()))
     print()
 
-    delElem = int(input("deleteValue: "))
-    myList.delete(delElem)
+    delElem = int(input("deleteAllOcurrences: "))
+    myList.deleteAllOcurrences(delElem)
     print()
     print(myList.getAllElements())
     print()
