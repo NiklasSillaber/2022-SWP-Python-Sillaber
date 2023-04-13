@@ -1,3 +1,5 @@
+package Patterns.ObserverPattern;
+
 public class Client {
     public static void main(String[]args){
         Zentrale messzentrale = new Zentrale(); 

@@ -1,4 +1,4 @@
-
+package Patterns.ObserverPattern;
 
 public class Wetter {
     private String description;

@@ -1,12 +1,16 @@
-public class ZentralePull extends MessstationPull {
+package Patterns.ObserverPattern;
+
+public class Zentrale extends Messstation {
+    
     private Wetter aktuellesWetter; 
 
     public void setAktuellesWetter(Wetter aktuellesWetter) { 
         this.aktuellesWetter = aktuellesWetter; 
-        verteileWetterPull(); 
+        verteileWetter(aktuellesWetter); 
     } 
 
     public Wetter getAktuellesWetter() { 
         return aktuellesWetter; 
     }
+
 }
