@@ -99,7 +99,7 @@ def strasse(hand):
             
         if sorted[i] - sorted[i - 1] != 1:
             return False
-
+    
     return True
     
 #Flush

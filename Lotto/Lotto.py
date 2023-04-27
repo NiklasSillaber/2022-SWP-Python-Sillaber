@@ -40,7 +40,7 @@ def saveInDictionary(results):
 #in mehrere Python Dateien: Python hat __Variablen__, werden von Python angelegt. in der __name__ steckt immer der Name von jeder Python Datei drinnen
 if __name__ == '__main__':
     
-    min, max, number_picks = 50, 99, 100000
+    min, max, number_picks = 50, 99, 10000
     
     statistics = createDictionary(min, max)
     
